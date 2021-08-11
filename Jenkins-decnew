@@ -20,11 +20,11 @@ pipeline{
             steps{
                 sshagent(['6fd473bd-510f-43bb-8cf6-f6e54cedd5a2']) {
                 sh """
-                    scp -o StrictHostKeyChecking=no target/myweb.war  ec2-user@172.31.5.101:/home/ec2-user/apache-tomcat-9.0.50/webapps/
+                    scp -o StrictHostKeyChecking=no target/myweb.war  ec2-user@13.233.153.185:/opt/apache-tomcat-9.0.50/webapps
                     
-                    ssh ec2-user@172.31.5.101 /home/ec2-user/apache-tomcat-9.0.50/bin/shutdown.sh
+                    ssh ec2-user@13.233.153.185 /home/ec2-user/apache-tomcat-9.0.50/bin/shutdown.sh
                     
-                    ssh ec2-user@172.31.5.101 /home/ec2-user/apache-tomcat-9.0.50/bin/startup.sh
+                    ssh ec2-user@13.233.153.185 /home/ec2-user/apache-tomcat-9.0.50/bin/startup.sh
                 
                 """
             }
