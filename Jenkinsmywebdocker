@@ -1,0 +1,38 @@
+node{
+    
+    buildNmuber= BUILD_NUMBER
+    stage("Git Clone"){
+        git url: ' https://github.com/sreedhark9/myweb.git ' , branch:'master' 
+        
+        }
+    
+    stage ("Maven Clean Package"){
+        def mavenHome= tool name:'Maven', type:'maven'
+        sh "${mavenHome}/bin/mvn clean package"
+        
+         }
+    
+    stage ("Build Docker Image"){
+        
+        sh "docker build -t sdkdocker99/myweb:${buildNmuber} . "
+    }
+    
+    stage("Docker Login and Push"){
+        withCredentials([string(credentialsId: 'DockerHubPwd', variable: 'DockerHubPwd')]) {
+      sh "docker login -u sdkdocker99 -p ${DockerHubPwd} "
+        
+    }
+    
+    sh "docker push sdkdocker99/myweb:${buildNmuber} "
+    }
+    
+    stage("Deploy Application As Docker Container In Docker Deployment Server"){
+        sshagent(['Docker_Dev_Server_SSH']) {
+    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.5.136 docker rm -f my-app|| true "
+    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.5.136 docker run -d -p 8081:8080 --name my-app sdkdocker99/myweb:${buildNmuber} "
+        
+        
+    }   
+        
+    }
+    }
