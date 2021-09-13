@@ -1,4 +1,4 @@
-node{
+node('slaves'){
     
     buildNmuber= BUILD_NUMBER
     stage("Git Clone"){
